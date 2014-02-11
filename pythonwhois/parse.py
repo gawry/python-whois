@@ -48,7 +48,8 @@ grammar = {
 					 'Domain Expiration Date\s?[.]*:?\s*?(?P<val>.+)',
 					 'paid-till:\s*(?P<val>.+)',
 					 'renewal:\s*(?P<val>.+)',
-					 'expire:\s*(?P<val>.+)'],
+					 'expire:\s*(?P<val>.+)',
+					 'expires:\s*(?P<val>.+)'],
 		'updated_date':		['\[Last Updated\]\s*(?P<val>.+)',
 					 'Record modified on[.]*: (?P<val>.+) [a-zA-Z]+',
 					 'Record last updated on[.]*: [a-zA-Z]+, (?P<val>.+)',
@@ -468,6 +469,7 @@ def parse_registrants(data):
 		"Contact Information : For Customer # [0-9]+[ ]*\n[ ]+(?P<firstname>.*)\n[ ]+(?P<lastname>.*)\n[ ]+(?P<organization>.*)\n[ ]+(?P<email>.*)\n[ ]+(?P<street>.*)\n[ ]+(?P<city>.*)\n[ ]+(?P<postalcode>.*)\n[ ]+(?P<phone>.*)\n[ ]+(?P<fax>.*)\n\n", # GAL Communication alternative (private WHOIS) format?
 		"   Registrant:\n      (?P<name>.+)\n      (?P<street>.+)\n      (?P<city>.+) (?P<state>\S+),[ ]+(?P<postalcode>.+)\n      (?P<country>.+)", # .am
 		"owner:\s+(?P<name>.+)", # .br
+		"\nnic-hdl-br:\s*(?P<handle>.+)\nperson:\s*(?P<name>.+)\ne\-mail:\s*(?P<email>.+)\n",  # Registro.br
 		"person:\s+(?P<name>.+)", # nic.ru (person)
 		"org:\s+(?P<organization>.+)", # nic.ru (organization)
 	]
@@ -491,6 +493,8 @@ def parse_registrants(data):
 		"Technical contact:\n(?:  (?P<organization>.+)\n)?  (?P<name>.+)\n  (?P<email>.+)\n  (?P<street>.+)\n  (?P<city>.+), (?P<state>.+) (?P<postalcode>.+) (?P<country>.+)\n  Phone: (?P<phone>.*)\n  Fax: (?P<fax>.*)\n", # Fabulous.com
 		"Admin Contact Information :[ ]*\n[ ]+(?P<firstname>.*)\n[ ]+(?P<lastname>.*)\n[ ]+(?P<organization>.*)\n[ ]+(?P<email>.*)\n[ ]+(?P<street>.*)\n[ ]+(?P<city>.*)\n[ ]+(?P<postalcode>.*)\n[ ]+(?P<phone>.*)\n[ ]+(?P<fax>.*)\n\n", # GAL Communication
 		"   Technical contact:\n      (?P<name>.+)\n      (?P<organization>.*)\n      (?P<street>.+)\n      (?P<city>.+) (?P<state>\S+),[ ]+(?P<postalcode>.+)\n      (?P<country>.+)\n      (?P<email>.+)\n      (?P<phone>.*)\n      (?P<fax>.*)", # .am
+		
+		"\nnic-hdl-br:\s*(?P<handle>.+)\nperson:\s*(?P<name>.+)\ne\-mail:\s*(?P<email>.+)\n", # Registro.br
 	]
 	
 	admin_contact_regexes = [
@@ -542,6 +546,7 @@ def parse_registrants(data):
 			"registrant:\s*(?P<handle>.+)", # nic.at
 			"holder-c:\s*(?P<handle>.+)", # AFNIC
 			"holder:\s*(?P<handle>.+)", # iis.se (they apparently want to be difficult, and won't give you contact info for the handle over their WHOIS service)
+			"responsible:\s*(?P<handle>.+)", # Registro.br
 		],
 		"tech": [
 			"tech-c:\s*(?P<handle>.+)", # nic.at, AFNIC, iis.se
